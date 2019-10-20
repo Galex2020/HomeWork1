@@ -17,11 +17,12 @@ namespace HomeWork
 		public static Vector operator +(Vector a, Vector b) => new Vector(a.X * b.X, a.Y * b.Y);
 		public static Vector operator -(Vector a, Vector b) => new Vector(a.X * b.X, a.Y * b.Y);
 		public static Vector operator *(Vector a, double k) => new Vector(a.X * k, a.Y * k);
-		public static double operator *(Vector a, Vector b) => (a.X * b.X) + (a.Y * b.Y);
-		public double Length(Vector a) => Math.Sqrt(a.X * a.X + a.Y * a.Y);
+        public static double operator *(Vector a, Vector b) => (a.X * b.X) + (a.Y * b.Y);
+
+		public double Length { get => Math.Sqrt(X * X + Y * Y); }
 	}
 
-	public class Direction
+	public class LineSegment
 	{
 		public class Point
 		{
@@ -38,13 +39,27 @@ namespace HomeWork
 		public Point A { get; set; }
 		public Point B { get; set; }
 
-		public Direction(Point a, Point b)
+		public LineSegment(Point a, Point b)
 		{
 			A = a;
 			B = b;
 		}
 
-		public double Length { get => Math.Sqrt(A.X * A.X + B.Y * B.Y); }
+        public double Length { get => Math.Sqrt(A.X * A.X + B.Y * B.Y); }
+
+        // Ну, я хоя бы пытался.
+        public static void AreTheyCrossing (LineSegment a, LineSegment b)
+        {
+            double v1 = (b.B.X - b.A.X) * (a.B.Y - b.A.Y) + (b.B.Y - b.A.Y) * (b.B.X - b.A.X);
+            double v2 = (b.B.X - b.A.X) * (a.B.Y - b.A.Y) + (b.B.Y - b.A.Y) * (b.B.X - b.A.X);
+            double v3 = (a.B.X - b.A.X) * (b.B.Y - b.A.Y) + (a.B.Y - b.A.Y) * (a.B.X - b.A.X);
+            double v4 = (a.B.X - b.A.X) * (b.B.Y - b.A.Y) + (a.B.Y - b.A.Y) * (a.B.X - b.A.X);
+
+            if (v1 * v2 < 0 && v3 * v4 < 0)
+                WriteLine("Пересекаются!");
+            else
+                WriteLine("Не пересекаются!");
+        }
 	}
 
 
@@ -52,10 +67,16 @@ namespace HomeWork
 	{
 		static void Main(string[] args)
 		{
-			var a1 = new Direction.Point(double.Parse(ReadLine()), double.Parse(ReadLine()));
-			var b1 = new Direction.Point(double.Parse(ReadLine()), double.Parse(ReadLine()));
-			var dir1 = new Direction(a1, b1);
-			WriteLine(dir1.Length);
+			var a11 = new LineSegment.Point(double.Parse(ReadLine()), double.Parse(ReadLine()));
+			var b12 = new LineSegment.Point(double.Parse(ReadLine()), double.Parse(ReadLine()));
+            var a21 = new LineSegment.Point(double.Parse(ReadLine()), double.Parse(ReadLine()));
+            var b22 = new LineSegment.Point(double.Parse(ReadLine()), double.Parse(ReadLine()));
+
+            var ls1 = new LineSegment(a11, b12);
+            var ls2 = new LineSegment(a21, b22);
+
+            LineSegment.AreTheyCrossing(ls1, ls2);
+
 			ReadKey(true);
 		}
 	}
